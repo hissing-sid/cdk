@@ -9,8 +9,19 @@ class VpcStack(cdk.Stack):
         vpc = ec2.Vpc(
             self, "TheVPC", 
             cidr="10.0.0.0/16",
+            max_azs=2,
             enable_dns_hostnames=True,
             enable_dns_support=True
+        )
+
+        # Send All Flow Logs to S3
+        vpc.add_flow_log("FlowLogS3",
+            destination=ec2.FlowLogDestination.to_s3()
+        )
+
+        # Send Flow Logs containing REJECTS to CloudWatch Logs
+        vpc.add_flow_log("FlowLogCloudWatch",
+            traffic_type=ec2.FlowLogTrafficType.REJECT
         )
 
         security_group = ec2.SecurityGroup(
