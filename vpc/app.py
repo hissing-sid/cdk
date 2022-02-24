@@ -7,6 +7,12 @@ from vpc.vpc_stack import VpcStack
 
 
 app = cdk.App()
-VpcStack(app, "VpcStack")
+vpc_stack=VpcStack(app, "VpcStack" )
+
+# Add tag to all resources in stack
+cdk.Tags.of(vpc_stack).add("env", "dev",
+    apply_to_launched_instances=True
+    )
+
 
 app.synth()
